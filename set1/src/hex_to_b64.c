@@ -43,13 +43,25 @@ int main(int argc, char* argv[]){
     uint num_steps = (total_len) / 3;
 
     for (uint j=0; j < num_steps; j++){
-        char c1 = hex_str[3*j];
-        char c2 = hex_str[3*j + 1];
-        char c3 = hex_str[3*j + 2];
+        //char c1 = hex_str[3*j];
+        //char c2 = hex_str[3*j + 1];
+        //char c3 = hex_str[3*j + 2];
 
+        uint d1 = (uint) (strchr(hex_table, hex_str[3*j]) - hex_table);
+        uint d2 = (uint) (strchr(hex_table, hex_str[3*j + 1]) - hex_table);
+        uint d3 = (uint) (strchr(hex_table, hex_str[3*j + 2]) - hex_table);
+
+        uint b64_idx1 = (d1 << 2) | ((d2 & 0b1100) >> 2);
+        uint b64_idx2 = (d3) | ((d2 & 0b0011) << 4);
+        //fprintf(stdout, "d1: %d d2: %d d3: %d\n", d1, d2, d3);
+        //fprintf(stdout, "d1 << 2: %d, (d2 & 0b1100) >> 2: %d\n", d1<<2, (d2 & 0b1100) >> 2); 
+        //fprintf(stdout, "b64_idx_1: %d b64_idx_2: %d\n", b64_idx1, b64_idx2);
+        b64_str[2*j] = base64_table[b64_idx1];
+        b64_str[2*j + 1] = base64_table[b64_idx2];
     }
 
-    
+    fprintf(stdout, "B64 str: %s\n", b64_str);
+
     free(hex_str);
     free(b64_str);
  
